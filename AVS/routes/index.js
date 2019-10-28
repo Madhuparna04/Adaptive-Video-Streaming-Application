@@ -5,7 +5,7 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
 	console.log("hello");
-  res.render('index', { title: 'NITK Video Streaming App' });
+  res.render('index', { title: 'NITK Video Streaming App'} );
 });
 
 router.post('/search', function(req, res){

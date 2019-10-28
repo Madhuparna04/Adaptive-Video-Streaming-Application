@@ -21,7 +21,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 router.get('/:uname', function(req, res, next) {
-    res.render('search',{uname: req.params.uname});
+    res.render('search',{uname: req.params.uname,title: 'Search'});
 });
 
 var list_names=[]
@@ -59,8 +59,9 @@ router.get('/search_results/:query', function(req, res, next) {
 						});
 		
 	}
-
-res.render('search_results', { query: qr, result: results });
+console.log(qr);
+console.log(results);
+res.render('search_results', { query: qr, result: results,title: 'Search Query' });
     });
 
 module.exports = router;
