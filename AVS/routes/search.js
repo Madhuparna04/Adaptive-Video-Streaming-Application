@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var firebase = require("firebase/app");
-
+var writeUserData=require('../seed/User-seeder');
 // Add the Firebase products that you want to use
 require("firebase/auth");
 require("firebase/database");
@@ -17,13 +17,13 @@ const firebaseConfig = {
   appId: "1:5967336401:web:396179e2720df9d04f86f0",
   measurementId: "G-7RQ0T2D8JF"
 };
-
+var user_name;
 firebase.initializeApp(firebaseConfig);
 
 router.get('/:uname', function(req, res, next) {
-    res.render('search',{uname: req.params.uname,title: 'Search'});
+	user_name=req.params.uname;
+    res.render('search',{uname: user_name,title: 'Search'});
 });
-
 var list_names=[]
 var list_tags=[]
 var ref = firebase.database().ref("videos/");
@@ -39,7 +39,6 @@ ref.once('value', function(snapshot) {
 
 
 router.get('/search_results/:query', function(req, res, next) {
-
 	var results=[]
 	var qr = req.params.query;
 	for(var i=0;i<list_names.length;++i)
@@ -52,17 +51,18 @@ router.get('/search_results/:query', function(req, res, next) {
 						});
 			}
 	}
-	for(var j=results.length;j<5;++j){
+	for(var j=results.length;j<5;++j)
+	{
 		results.push({
 					    name:   "",
 					    tags:  ""
 						});
-		
 	}
 console.log(qr);
 console.log(results);
 res.render('search_results', { query: qr, result: results,title: 'Search Query' });
-    });
+writeUserData(user_name,qr);
+});
 
 module.exports = router;
 

@@ -1,6 +1,22 @@
-<h1>Welcome to <%= title %></h1>
+<h1 class="fix">Welcome to <%= title %></h1>
 <form action="/search" method="post">
 Enter Username: 
 <input type="text" name="username" ><br><br>
   <input type="submit" value="Submit">
 </form>
+<section class="flex">
+  <article class="flex_elements" id="trend">
+    <h2>
+        trending now
+    </h2>
+    <video controls preload loop autoplay >
+      <source src="http://localhost:3000/stuff.mp4" type="video/mp4" /> 
+      browser doesn't support the video format
+    </video> 
+  </article>
+  <article class="flex_elements" id="tag">
+    <h2>
+        tags
+    </h2>
+  </article>
+</section>

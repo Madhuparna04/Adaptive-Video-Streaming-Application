@@ -20,11 +20,11 @@ firebase.initializeApp(firebaseConfig);
 var database = firebase.database();
 var vnames = ["nodejs","express","html","css","mongo","mongodb","nodemon","common mistakes","model view"];
 var tags = ["education","web-development","beginner"];
-function writeUserData(videoId, vname, tags) {
+function writeVideoData(videoId, vname, tags) {
   firebase.database().ref('videos/' + videoId).set({
     Vname: vname,
     tags: tags,
   });
 }
 for(var i=0;i<9;++i)
-	writeUserData(i,vnames[i]+" tutorial",tags);
+  writeVideoData(i,vnames[i]+" tutorial",tags);
