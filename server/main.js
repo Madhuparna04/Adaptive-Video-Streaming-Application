@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
-const port = 8000
+const router = express.Router();
+const port = 8888
 const firebase = require("firebase/app");
 const max_load_per_server = 10000;
 
@@ -23,7 +24,7 @@ firebase.initializeApp(firebaseConfig);
 var ref = firebase.database().ref("videoData/");
 
 
-var local_servers =[];
+var local_servers_map = {};
 var local_server = require('./classes/local_server.js');
 let localServer = local_server.localServer;
 
@@ -43,18 +44,23 @@ app.listen(port, () => {
 
 app.get('/', (req, res) => {
 	var min = max_load_per_server;
-	var server_index = -1;
+	var server_url = "";
 
-	var i=0;
-	for (i=0; i<local_servers.length; i++){
-		if(min > local_servers[i].load){
-			min = local_servers[i].load;
-			server_index = i;
+	var temp2 = new localServer("http://127.0.0.1:3000",0);
+	local_servers_map[temp2.url] = temp2;
+
+	var temp1 = new localServer("http://127.0.0.1:3001",0);
+	local_servers_map[temp1.url] = temp1;
+
+	for (server in local_servers_map){
+		if(min > local_servers_map[server].load){
+			min = local_servers_map[server].load;
+			server_url = local_servers_map[server].url;
 		}
 	}
 
-	console.log(local_servers[server_index]);
-	res.redirect(local_servers[server_index].url);
+	local_servers_map[server_url].load++;
+	res.redirect(server_url);
 });
 
 
@@ -62,9 +68,40 @@ app.post('/', (req, res) => {
 	var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
 	var initial_load = 0;
 	var temp = new localServer(fullUrl, initial_load);
-	local_servers.push(temp);
+	local_servers_map[fullUrl] = temp;
 	
-	res.send("Server noted successfully");
+	res.send("Server recorded successfully");
 
+});
+
+app.get('/videos/:videoId', (req, res) => {
+
+	var prevUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+	console.log("here");
+	console.log(req.params.videoId);
+	var v_ref = firebase.database().ref("videoData/"+req.params.videoId);
+	required_servers= [];
+
+	console.log(v_ref);
+	v_ref.once('value', function(snapshot) {
+		snapshot.forEach(function(childSnapshot) {
+			var childKey = childSnapshot.val();
+			required_servers.push(childKey);
+    	});
+
+	});
+
+	var min = max_load_per_server;
+	var newUrl = "";
+	for (server in required_servers){
+		if(min > local_servers_map[server].load){
+			min = local_servers_map[server].load;
+			newUrl = local_servers_map[server].url;
+		}
+	}
+
+	local_servers_map[newUrl].load++;
+	local_servers_map[prevUrl].load--;
+	res.redirect(newUrl);
 });
 
