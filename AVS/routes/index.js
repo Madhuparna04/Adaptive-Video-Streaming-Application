@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET home page. */
 
 router.get('/', function(req, res, next) {
-	console.log("hello");
+	console.log("Video Streaming App Started");
   res.render('index', { title: 'NITK Video Streaming App'} );
 });
 
