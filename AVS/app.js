@@ -38,4 +38,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+app.on('listening', function () {
+    // server ready to accept connections here
+    console.log("server started");
+});
 module.exports = app;
