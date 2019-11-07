@@ -10,6 +10,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var searchRouter = require('./routes/search');
 var videosRouter = require('./routes/videos');
+var streamRouter = require('./routes/stream');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const GridFsStorage = require('multer-gridfs-storage');
@@ -29,6 +30,7 @@ app.use(express.urlencoded())
 app.use('/', indexRouter);
 app.use('/search', searchRouter);
 app.use('/videos', videosRouter);
+app.use('/stream', streamRouter);
 app.use(bodyParser.json()); 
 app.use(upload.array()); 
 app.use(express.static('public'));
@@ -44,6 +46,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
   */
+ console.log(err);
 });
 
 

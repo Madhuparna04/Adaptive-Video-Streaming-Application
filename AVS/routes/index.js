@@ -64,6 +64,10 @@ router.post('/videos', function(req, res){
    res.redirect('/videos/'+req.body.username);
 });
 
+router.post('/stream', function(req, res){
+   res.redirect('/stream/'+req.body.username);
+});
+
 router.post('/search/search_results', function(req, res){
    res.redirect('/search/search_results/'+req.body.Search);
 });
