@@ -51,13 +51,7 @@ router.get('/search_results/:query', function(req, res, next) {
 						});
 			}
 	}
-	for(var j=results.length;j<5;++j)
-	{
-		results.push({
-					    name:   "",
-					    tags:  ""
-						});
-	}
+
 console.log(qr);
 console.log(results);
 res.render('search_results', { query: qr, result: results,title: 'Search Query' });
