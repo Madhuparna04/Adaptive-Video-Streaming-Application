@@ -45,7 +45,7 @@ const storage = new GridFsStorage({
   });
 const upload = multer({ storage });
 
-// @route GET /videos
+// @route GET /videos/:filename
 // @desc streams videos
 router.get('/:filename',(req, res) => {
     console.log('Reached videos');
