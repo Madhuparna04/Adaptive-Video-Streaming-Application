@@ -45,21 +45,33 @@ const storage = new GridFsStorage({
   });
 const upload = multer({ storage });
 
-// @route GET /videos
-// @desc streams videos
-router.get('/:filename',(req, res) => {
-    console.log('Reached videos');
-    gfs.files.findOne({filename: req.params.filename}, (err, file) => {
-    console.log('Reached gfs');
-    console.log(file);
-      // Check if files 
-      if(!file){
-          res.render('play_video', {file: false, title: 'Watch Video'});
-      } else {
-          res.render('play_video', {file: file, title: 'Watch Video'});
+
+
+// @route GET /stream/:filename
+// @desc Display videos 
+router.get('/:filename', (req, res) => {
+    console.log("found file");
+  gfs.files.findOne({filename: req.params.filename}, (err, file) => {
+      // Check if files
+      if(!file || file.length == 0){
+          return res.status(404).json({
+              err: 'No file exists'
+          });
+      }
+
+      // Check if image
+      if(file.contentType === 'video/mp4'){
+          console.log('retreiving video from db');
+          // Read output to browser
+          const readstream = gfs.createReadStream(file.filename);
+          readstream.pipe(res);
+      }
+      else{
+          res.status(404).json({
+              err: 'No file exists'
+          });
       }
   });
-  //res.render('play_video', {files: false, title: 'Watch Video'});
 });
 
 module.exports = router;
