@@ -1,9 +1,12 @@
+
 const express = require('express')
 const app = express()
 const router = express.Router();
 const port = 8888
 const firebase = require("firebase/app");
 const max_load_per_server = 10000;
+const bodyParser = require('body-parser')
+
 
 require("firebase/auth");
 require("firebase/database");
@@ -36,6 +39,14 @@ ref.once('value', function(snapshot) {
     console.log("Connected to database ");
 });
 
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+)
+
+app.use(bodyParser.json())
+
 
 app.listen(port, () => {
 	console.log(`Central server listening on port ${port}!`)
@@ -45,13 +56,7 @@ app.listen(port, () => {
 app.get('/', (req, res) => {
 	var min = max_load_per_server;
 	var server_url = "";
-
-	var temp2 = new localServer("http://127.0.0.1:3000",0);
-	local_servers_map[temp2.url] = temp2;
-
-	var temp1 = new localServer("http://127.0.0.1:3001",0);
-	local_servers_map[temp1.url] = temp1;
-
+	
 	for (server in local_servers_map){
 		if(min > local_servers_map[server].load){
 			min = local_servers_map[server].load;
@@ -59,26 +64,32 @@ app.get('/', (req, res) => {
 		}
 	}
 
+	console.log(server_url);
 	local_servers_map[server_url].load++;
 	res.redirect(server_url);
 });
 
 
 app.post('/', (req, res) => {
-	var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+	console.log("noting server");
+	var fullUrl = req.body.url;
+	console.log(fullUrl);
+
 	var initial_load = 0;
 	var temp = new localServer(fullUrl, initial_load);
 	local_servers_map[fullUrl] = temp;
-	
+	console.log(local_servers_map);
 	res.send("Server recorded successfully");
 
 });
 
-app.get('/videos/:videoId', (req, res) => {
+app.post('/redirect/', (req, res) => {
 
-	var prevUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-	console.log("here");
+	console.log("REDIRECTING....");
+	var prevUrl = req.body.url;
+	var videoId = req.body.file;
 	console.log(req.params.videoId);
+
 	var v_ref = firebase.database().ref("videoData/"+req.params.videoId);
 	required_servers= [];
 
@@ -90,6 +101,10 @@ app.get('/videos/:videoId', (req, res) => {
     	});
 
 	});
+
+	if(v_ref === undefined){
+		console.log("Video not found");
+	}
 
 	var min = max_load_per_server;
 	var newUrl = "";
@@ -104,4 +119,3 @@ app.get('/videos/:videoId', (req, res) => {
 	local_servers_map[prevUrl].load--;
 	res.redirect(newUrl);
 });
-
