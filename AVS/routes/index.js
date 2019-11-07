@@ -4,7 +4,7 @@ var fs=require('fs');
 /* GET home page. */
 
 router.get('/', function(req, res, next) {
-	console.log("hello");
+	console.log("Video Streaming App Started");
   res.render('index', { title: 'NITK Video Streaming App'} );
 });
 
@@ -58,6 +58,14 @@ router.get('/pictures/pic.png',function(req,res)
 
 router.post('/search', function(req, res){
    res.redirect('/search/'+req.body.username);
+});
+
+router.post('/videos', function(req, res){
+   res.redirect('/videos/'+req.body.username);
+});
+
+router.post('/stream', function(req, res){
+   res.redirect('/stream/'+req.body.username);
 });
 
 router.post('/search/search_results', function(req, res){

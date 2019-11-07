@@ -27,6 +27,7 @@ router.get('/:uname', function(req, res, next) {
 var list_names=[]
 var list_tags=[]
 var ref = firebase.database().ref("videos/");
+
 ref.once('value', function(snapshot) {
 	snapshot.forEach(function(childSnapshot) {
 	var childKey = childSnapshot.val();
@@ -34,7 +35,7 @@ ref.once('value', function(snapshot) {
 	list_tags.push(childKey.tags);
 
     });
-    console.log("Done!");
+    console.log("Connected to database");
 });
 
 
