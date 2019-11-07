@@ -6,7 +6,7 @@ var fs=require('fs');
 // @desc Display videos 
 router.get('/:filename', (req, res) => {
     console.log("reached 2");
-    const path = __dirname + '/' + req.params.filename;
+    const path = __dirname + '/videofiles/' + req.params.filename + '.mp4';
     const stat = fs.statSync(path);
     const fileSize = stat.size
     const range = req.headers.range
