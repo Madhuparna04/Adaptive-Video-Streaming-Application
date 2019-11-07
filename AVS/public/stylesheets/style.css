@@ -1,23 +1,69 @@
-body {
+body
+{
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-
-a {
+.fix
+{
+  position:fixed;
+  font-family: cursive;
+  text-align: center;
+  top:0px;
+  left:0px;
+  margin: 0 auto;
+  padding:30px;
+  width: 100%;
+  background-color: lightcoral;
+}
+a
+{
   color: #00B7FF;
 }
-
-input {
+.flex
+{
+    display: flex;
+    flex-flow: row wrap;
+}
+.flex_elements
+{
+    flex:1;
+    background-color: lightgrey;
+    border-radius: 20px;
+    text-align: center;
+    padding:1rem;
+    margin:1rem;
+    border: 5px solid black;
+}
+#trend
+{
+  flex:3;
+ background-color: lightskyblue;
+}
+#tag
+{
+  flex:1;
+  background-color: honeydew;
+}
+input
+{
   border: 1px solid transparent;
   background-color: #f1f1f1;
   padding: 10px;
   font-size: 16px;
 }
-input[type=text] {
+input[type=text]
+{
   background-color: #f1f1f1;
   width: 80%;
 }
-input[type=submit] {
+
+input[type=submit]
+{
   background-color: DodgerBlue;
   color: #fff;
+}
+
+video
+{
+  width:75%;
 }
