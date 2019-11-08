@@ -1,4 +1,3 @@
-
 const express = require('express')
 const app = express()
 const router = express.Router();
@@ -88,34 +87,37 @@ app.post('/redirect/', (req, res) => {
 	console.log("REDIRECTING....");
 	var prevUrl = req.body.url;
 	var videoId = req.body.file;
-	console.log(req.params.videoId);
+	
+	console.log(videoId);
+	var v_ref = firebase.database().ref("videoData/"+videoId);
+	var required_servers= [];
 
-	var v_ref = firebase.database().ref("videoData/"+req.params.videoId);
-	required_servers= [];
-
-	console.log(v_ref);
 	v_ref.once('value', function(snapshot) {
 		snapshot.forEach(function(childSnapshot) {
 			var childKey = childSnapshot.val();
 			required_servers.push(childKey);
+			//console.log(childKey);
+			//console.log(required_servers);
     	});
 
-	});
+    	console.log("here");
+		console.log(required_servers);
 
-	if(v_ref === undefined){
-		console.log("Video not found");
-	}
 
-	var min = max_load_per_server;
-	var newUrl = "";
-	for (server in required_servers){
-		if(min > local_servers_map[server].load){
-			min = local_servers_map[server].load;
-			newUrl = local_servers_map[server].url;
+		var min = max_load_per_server;
+		var newUrl = "";
+		for (server in required_servers){
+			console.log(required_servers[server]);
+			if(min > local_servers_map[required_servers[server]].load){
+				min = local_servers_map[required_servers[server]].load;
+				newUrl = local_servers_map[required_servers[server]].url;
+			}
 		}
-	}
+		console.log(newUrl+"/videos/"+videoId);
+		local_servers_map[newUrl].load++;
+		local_servers_map[prevUrl].load--;
+		res.send(newUrl+"/videos/"+videoId);
 
-	local_servers_map[newUrl].load++;
-	local_servers_map[prevUrl].load--;
-	res.redirect(newUrl);
+	});
+	
 });

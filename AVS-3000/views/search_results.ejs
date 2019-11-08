@@ -1,0 +1,21 @@
+
+
+<h1 class="fix"> Search Results for Query: <%=  query  %></h1>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div>
+    we have found <%= result.length %> results for you :-
+    <ol>
+        <% result.forEach(function(item){ %>
+            <li>
+            <h2><%= item.name%></h2>
+                <form action = "/videos/<%= item.name%>" method = "GET">
+                <input type="submit" value="Submit">
+                </form>
+            </li>
+        <% }); %>
+    </ol>
+</div>
