@@ -38,10 +38,21 @@ ref.once('value', function(snapshot) {
     console.log("Connected to database");
 });
 
+var SpellCorrector = require('spelling-corrector');
+ 
+var spellCorrector = new SpellCorrector();
+ 
+// you need to do this step only one time to load the Dictionary
+spellCorrector.loadDictionary();
+ 
+console.log(spellCorrector.correct('sucess'));
+ 
+console.log(spellCorrector.correct('spel'));
+
 
 router.get('/search_results/:query', function(req, res, next) {
 	var results=[]
-	var qr = req.params.query;
+	var qr = req.params.query.toLowerCase() ;
 	for(var i=0;i<list_names.length;++i)
 	{
 		if(list_names[i].includes(qr))
