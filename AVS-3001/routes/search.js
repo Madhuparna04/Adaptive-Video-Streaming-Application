@@ -41,11 +41,9 @@ ref.once('value', function(snapshot) {
 var SpellCorrector = require('spelling-corrector');
  
 var spellCorrector = new SpellCorrector();
- 
-// you need to do this step only one time to load the Dictionary
 spellCorrector.loadDictionary();
  
-console.log(spellCorrector.correct('sucess'));
+console.log(spellCorrector.correct('inro'));
  
 console.log(spellCorrector.correct('spel'));
 
@@ -53,9 +51,11 @@ console.log(spellCorrector.correct('spel'));
 router.get('/search_results/:query', function(req, res, next) {
 	var results=[]
 	var qr = req.params.query.toLowerCase() ;
+	console.log(spellCorrector.correct(qr));
+	cor = spellCorrector.correct(qr);
 	for(var i=0;i<list_names.length;++i)
 	{
-		if(list_names[i].includes(qr))
+		if(list_names[i].includes(qr) || list_names[i].includes(cor))
 			{
 				results.push({
 					    name:   list_names[i],
