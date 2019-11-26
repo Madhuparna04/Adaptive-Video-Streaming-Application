@@ -1,12 +1,28 @@
 var express = require('express');
 var router = express.Router();
 var fs=require('fs');
+var crypto = require('crypto');
+
+router.get('/:count', (req, res) => {
+  const buf = crypto.randomBytes(req.params.count);
+  res.send(buf);
+});
 
 // @route GET /stream/:filename
 // @desc Display videos 
-router.get('/:filename', (req, res) => {
-    console.log("reached 2");
-    const path = __dirname + '/videofiles/' + req.params.filename + '.mp4';
+router.get('/:cat/:filename', (req, res) => {
+    // console.log("reached 2");
+    console.log(req.headers.referer);
+    var path = __dirname + '/videofiles-medium/' + req.params.filename + '.mp4';;
+    if(req.params.cat === '1'){
+      path = __dirname + '/videofiles-low/' + req.params.filename + '.mp4';
+    }
+    else if(req.params.cat === '2'){
+      path = __dirname + '/videofiles-medium/' + req.params.filename + '.mp4';
+    }
+    else if(req.params.cat === '3'){
+      path = __dirname + '/videofiles-high/' + req.params.filename + '.mp4';
+    }
     const stat = fs.statSync(path);
     const fileSize = stat.size
     const range = req.headers.range
