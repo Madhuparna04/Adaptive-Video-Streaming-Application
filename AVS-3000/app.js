@@ -44,11 +44,12 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
   */
- // console.log(err);
+  console.log(err);
 });
 
 app.on('listening', function () {
     // server ready to accept connections here
     console.log("server started");
 });
+
 module.exports = app;
