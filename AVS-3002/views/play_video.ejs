@@ -5,7 +5,7 @@
                 <% if(file){ %>
                         <div class="card card-body mb-3">
                             <video style="width: 100%;" controls autoplay> 
-                                <source src="/stream/<%= file %>" type="video/mp4">
+                                <source src="/stream/<%= cat %>/<%= file %>" type="video/mp4">
                             </video>
                         </div>
                 <% } else { %>
